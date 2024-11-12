@@ -1,10 +1,13 @@
 # Base image
 FROM alpine:latest
 
-# Install Tor, Privoxy, Python, pip, and Stem
+# Install Tor, Privoxy, Python, and necessary tools
 RUN apk update && \
-    apk add tor privoxy python3 py3-pip busybox-suid && \
-    pip install stem Flask
+    apk add tor privoxy python3 py3-pip busybox-suid
+
+# Set up a virtual environment and install Python packages
+RUN python3 -m venv /venv
+RUN /venv/bin/pip install stem Flask
 
 # Generate the hashed password for Tor
 RUN tor --hash-password TorPass34 > /hashed_password.txt
@@ -24,4 +27,4 @@ COPY renew_ip.py /renew_ip.py
 EXPOSE 8118 12453 12454 5000
 
 # Run Tor, Privoxy, and Flask app for IP renewal
-CMD ["sh", "-c", "tor & privoxy /etc/privoxy/config & python3 /renew_ip.py"]
+CMD ["sh", "-c", "tor & privoxy /etc/privoxy/config & /venv/bin/python /renew_ip.py"]
