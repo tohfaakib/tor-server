@@ -5,8 +5,9 @@ FROM alpine:latest as builder
 RUN apk update && \
     apk add tor python3 py3-pip busybox-suid
 
-# Install Python packages
-RUN pip install Flask requests stem
+# Set up a virtual environment and install Python packages
+RUN python3 -m venv /venv
+RUN /venv/bin/pip install Flask requests stem
 
 # Generate the hashed password and save it in a file
 RUN tor --hash-password TorPass34 > /hashed_password.txt
@@ -16,13 +17,13 @@ FROM alpine:latest
 
 # Install Tor and other necessary tools
 RUN apk update && \
-    apk add tor python3 py3-pip busybox-suid
-
-# Install Python packages
-RUN pip install Flask requests stem
+    apk add tor python3 busybox-suid
 
 # Copy the hashed password from the builder stage
 COPY --from=builder /hashed_password.txt /hashed_password.txt
+
+# Copy the virtual environment
+COPY --from=builder /venv /venv
 
 # Copy the script to generate torrc
 COPY generate_torrc.sh /generate_torrc.sh
@@ -39,5 +40,5 @@ COPY proxy_app.py /proxy_app.py
 # Expose necessary ports
 EXPOSE 5000 12453 12454
 
-# Run Tor and the Flask app
-CMD ["sh", "-c", "tor & python3 /proxy_app.py"]
+# Run Tor and the Flask app in the virtual environment
+CMD ["sh", "-c", "tor & /venv/bin/python /proxy_app.py"]
