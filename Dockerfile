@@ -15,7 +15,7 @@ RUN tor --hash-password TorPass34 > /hashed_password.txt
 # Stage 2: Set up Tor, Privoxy, and Flask with the hashed password
 FROM alpine:latest
 
-# Install Tor, Privoxy, and other necessary tools
+# Install Tor, Privoxy, Flask, Requests, and other necessary tools
 RUN apk update && \
     apk add tor python3 py3-flask py3-requests busybox-suid privoxy
 
