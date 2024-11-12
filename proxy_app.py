@@ -5,10 +5,10 @@ from stem.control import Controller
 
 app = Flask(__name__)
 
-# Configure the Privoxy proxy that forwards traffic to Tor
+# Configure the Tor SOCKS5 proxy
 PROXIES = {
-    'http': 'http://127.0.0.1:8118',
-    'https': 'http://127.0.0.1:8118'
+    'http': 'socks5h://127.0.0.1:12453',
+    'https': 'socks5h://127.0.0.1:12453'
 }
 
 # Endpoint to renew Tor connection
