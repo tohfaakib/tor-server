@@ -4,6 +4,11 @@ from stem.control import Controller
 
 app = Flask(__name__)
 
+# Health check endpoint
+@app.route('/hello', methods=['GET'])
+def health_check():
+    return jsonify({"status": "ok"}), 200
+
 @app.route('/renew', methods=['POST'])
 def renew_connection():
     try:
