@@ -11,6 +11,13 @@ PROXIES = {
     'https': 'socks5h://127.0.0.1:12453'
 }
 
+
+# Health check endpoint
+@app.route('/hello', methods=['GET'])
+def health_check():
+    return jsonify({"status": "ok"}), 200
+
+
 # Endpoint to renew Tor connection
 @app.route('/renew', methods=['POST'])
 def renew_connection():
