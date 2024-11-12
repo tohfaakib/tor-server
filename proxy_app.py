@@ -7,8 +7,8 @@ app = Flask(__name__)
 
 # Configure the Tor SOCKS5 proxy
 PROXIES = {
-    'http': 'socks5h://127.0.0.1:12453',
-    'https': 'socks5h://127.0.0.1:12453'
+    'http': 'socks5://127.0.0.1:12453',
+    'https': 'socks5://127.0.0.1:12453'
 }
 
 
@@ -19,7 +19,7 @@ def health_check():
 
 
 # Endpoint to renew Tor connection
-@app.route('/renew', methods=['POST'])
+@app.route('/renew', methods=['GET', 'POST'])
 def renew_connection():
     try:
         with Controller.from_port(address="127.0.0.1", port=12454) as controller:

@@ -5,7 +5,7 @@ FROM alpine:latest
 RUN apk update && \
     apk add tor python3 py3-pip busybox-suid && \
     python3 -m venv /venv && \
-    /venv/bin/pip install stem Flask requests
+    /venv/bin/pip install stem Flask requests "requests[socks]"
 
 # Generate the hashed password for Tor
 RUN tor --hash-password TorPass34 > /hashed_password.txt
